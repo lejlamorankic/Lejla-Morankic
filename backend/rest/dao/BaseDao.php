@@ -13,6 +13,14 @@ class BaseDao {
        $this->connection = Database::connect();
    }
 
+   public function getByColumn($column, $value): mixed {
+    $stmt = $this->connection->prepare("SELECT * FROM {$this->table} WHERE {$column} = :value");
+    $stmt->bindParam(':value', $value);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
 
    public function getAll() {
        $stmt = $this->connection->prepare("SELECT * FROM " . $this->table);
@@ -26,9 +34,8 @@ class BaseDao {
        $stmt->bindParam(':id', $id);
        $stmt->execute();
        return $stmt->fetch();
-   }
-
-
+   } 
+    
    public function insert($data) {
        $columns = implode(", ", array_keys($data));
        $placeholders = ":" . implode(", :", array_keys($data));

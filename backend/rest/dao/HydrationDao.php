@@ -6,8 +6,12 @@ class HydrationDao extends BaseDao {
         parent::__construct("hydration");
     }
 
-     public function get_by_id($id){
-        return $this->getById($id);
+    public function getAll(){
+        return $this->getAll();
+    
+    }
+    public function delete($id) {
+        return $this->delete($id);
     }
 
 

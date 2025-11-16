@@ -6,8 +6,8 @@ class MotivationDao extends BaseDao {
         parent::__construct("motivation");
     }
 
-     public function get_by_id($id){
-        return $this->getById($id);
+     public function getByUserId($user_id): mixed {
+        return $this->getByColumn('user_id', $user_id);
     }
 
 

@@ -6,9 +6,8 @@ class WorkoutsDao extends BaseDao {
         parent::__construct("workouts");
     }
 
-     public function get_by_id($id){
-        return $this->getById($id);
+      public function getById($id) {
+        return parent::getById($id);
     }
-
 }
 ?>
