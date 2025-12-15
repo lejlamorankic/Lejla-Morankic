@@ -1,5 +1,10 @@
 <?php
-require_once __DIR__ . '/../dao/UserDao.php';
+
+require_once __DIR__ . '/../services/UserService.php';
+require_once __DIR__ . '/../../middleware/AuthMiddleware.php';
+require_once __DIR__ . '/../data/roles.php';
+
+
 use OpenApi\Annotations as OA;
 
 /**
@@ -7,23 +12,24 @@ use OpenApi\Annotations as OA;
  *     path="/users",
  *     tags={"users"},
  *     summary="Get all users",
+ *     security={{"BearerAuth": {}}},
  *     @OA\Response(
  *         response=200,
  *         description="List of all users"
  *     )
  * )
  */
-Flight::route('GET /users', function(): void {
-    $dao = new UserDao();
-    Flight::json($dao->getAllUsers());
+Flight::route('GET /users', function () {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
+    Flight::json(Flight::user_service()->getAll());
 });
-
 
 /**
  * @OA\Get(
  *     path="/users/{id}",
  *     tags={"users"},
  *     summary="Get user by ID",
+ *     security={{"BearerAuth": {}}},
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -33,48 +39,54 @@ Flight::route('GET /users', function(): void {
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="User with given ID"
+ *         description="User details"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="User not found"
  *     )
  * )
  */
-Flight::route('GET /users/@id', function(int $id): void {
-    $dao = new UserDao();
-    Flight::json($dao->getById($id));
+Flight::route('GET /users/@id', function ($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
+    Flight::json(Flight::user_service()->getById($id));
 });
-
 
 /**
  * @OA\Post(
  *     path="/users",
  *     tags={"users"},
- *     summary="Create a new user",
+ *     summary="Create new user",
+ *     security={{"BearerAuth": {}}},
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"name","email"},
- *             @OA\Property(property="name", type="string", example="Lejla"),
- *             @OA\Property(property="email", type="string", example="lejla@example.com")
+ *             required={"name","email","password","role"},
+ *             @OA\Property(property="name", type="string", example="John Doe"),
+ *             @OA\Property(property="email", type="string", example="john@gmail.com"),
+ *             @OA\Property(property="password", type="string", example="password123"),
+ *             @OA\Property(property="role", type="string", example="user")
  *         )
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="New user created"
+ *         description="User created successfully"
  *     )
  * )
  */
-Flight::route('POST /users', function(): void {
-    $dao   = new UserDao();
-    $data  = Flight::request()->data->getData();
-    $id    = $dao->add($data);
-    Flight::json(['id' => $id]);
-});
+Flight::route('POST /users', function () {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
 
+    $data = json_decode(Flight::request()->getBody(), true);
+    Flight::json(Flight::user_service()->add($data));
+});
 
 /**
  * @OA\Put(
  *     path="/users/{id}",
  *     tags={"users"},
  *     summary="Update existing user",
+ *     security={{"BearerAuth": {}}},
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -85,29 +97,30 @@ Flight::route('POST /users', function(): void {
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             @OA\Property(property="name", type="string", example="Updated name"),
- *             @OA\Property(property="email", type="string", example="updated@example.com")
+ *             @OA\Property(property="name", type="string"),
+ *             @OA\Property(property="email", type="string"),
+ *             @OA\Property(property="role", type="string")
  *         )
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="User updated"
+ *         description="User updated successfully"
  *     )
  * )
  */
-Flight::route('PUT /users/@id', function(int $id): void {
-    $dao   = new UserDao();
-    $data  = Flight::request()->data->getData();
-    $dao->updateUser($id, $data);
-    Flight::json(['message' => 'User updated successfully']);
-});
+Flight::route('PUT /users/@id', function ($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
 
+    $data = json_decode(Flight::request()->getBody(), true);
+    Flight::json(Flight::user_service()->update($id, $data));
+});
 
 /**
  * @OA\Delete(
  *     path="/users/{id}",
  *     tags={"users"},
  *     summary="Delete user by ID",
+ *     security={{"BearerAuth": {}}},
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -117,12 +130,11 @@ Flight::route('PUT /users/@id', function(int $id): void {
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="User deleted"
+ *         description="User deleted successfully"
  *     )
  * )
  */
-Flight::route('DELETE /users/@id', function(int $id): void {
-    $dao = new UserDao();
-    $dao->deleteUser($id);
-    Flight::json(['message' => 'User deleted successfully']);
+Flight::route('DELETE /users/@id', function ($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
+    Flight::json(Flight::user_service()->delete($id));
 });

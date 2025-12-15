@@ -1,5 +1,10 @@
 <?php
-require_once __DIR__ . '/../dao/MealsDao.php';
+
+require_once __DIR__ . '/../services/MealsService.php';
+require_once __DIR__ . '/../../middleware/AuthMiddleware.php';
+require_once __DIR__ . '/../data/roles.php';
+
+
 use OpenApi\Annotations as OA;
 
 /**
@@ -7,22 +12,24 @@ use OpenApi\Annotations as OA;
  *     path="/meals",
  *     tags={"meals"},
  *     summary="Get all meals",
+ *     security={{"BearerAuth": {}}},
  *     @OA\Response(
  *         response=200,
  *         description="List of all meals"
  *     )
  * )
  */
-Flight::route('GET /meals', function() {
-    $dao = new MealsDao();
-    Flight::json($dao->getAll());
+Flight::route('GET /meals', function () {
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
+    Flight::json(Flight::meals_service()->getAll());
 });
 
 /**
  * @OA\Get(
  *     path="/meals/{id}",
  *     tags={"meals"},
- *     summary="Get a meal by ID",
+ *     summary="Get meal by ID",
+ *     security={{"BearerAuth": {}}},
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -32,49 +39,53 @@ Flight::route('GET /meals', function() {
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="Meal data"
+ *         description="Meal details"
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Meal not found"
  *     )
  * )
  */
-Flight::route('GET /meals/@id', function($id) {
-    $dao = new MealsDao();
-    Flight::json($dao->getById($id));
+Flight::route('GET /meals/@id', function ($id) {
+    Flight::auth_middleware()->authorizeRoles([Roles::ADMIN, Roles::USER]);
+    Flight::json(Flight::meals_service()->getById($id));
 });
 
 /**
  * @OA\Post(
  *     path="/meals",
  *     tags={"meals"},
- *     summary="Create a new meal",
+ *     summary="Create new meal",
+ *     security={{"BearerAuth": {}}},
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
  *             required={"name","calories"},
- *             @OA\Property(property="name", type="string", example="Chicken Salad"),
- *             @OA\Property(property="calories", type="integer", example=350),
- *             @OA\Property(property="protein", type="integer", example=30),
- *             @OA\Property(property="carbs", type="integer", example=10),
- *             @OA\Property(property="fat", type="integer", example=15)
+ *             @OA\Property(property="name", type="string", example="Grilled Chicken Salad"),
+ *             @OA\Property(property="calories", type="integer", example=420),
+ *             @OA\Property(property="description", type="string", example="Healthy meal")
  *         )
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="New meal created"
+ *         description="Meal created successfully"
  *     )
  * )
  */
-Flight::route('POST /meals', function() {
-    $dao = new MealsDao();
-    $data = Flight::request()->data->getData();
-    $id = $dao->insert($data);
-    Flight::json(['id' => $id]);
+Flight::route('POST /meals', function () {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
+
+    $data = json_decode(Flight::request()->getBody(), true);
+    Flight::json(Flight::meals_service()->add($data));
 });
 
 /**
  * @OA\Put(
  *     path="/meals/{id}",
  *     tags={"meals"},
- *     summary="Update a meal",
+ *     summary="Update meal",
+ *     security={{"BearerAuth": {}}},
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -85,31 +96,30 @@ Flight::route('POST /meals', function() {
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             @OA\Property(property="name", type="string", example="Updated Meal Name"),
- *             @OA\Property(property="calories", type="integer", example=450),
- *             @OA\Property(property="protein", type="integer", example=40),
- *             @OA\Property(property="carbs", type="integer", example=20),
- *             @OA\Property(property="fat", type="integer", example=10)
+ *             @OA\Property(property="name", type="string", example="Updated Meal"),
+ *             @OA\Property(property="calories", type="integer", example=500),
+ *             @OA\Property(property="description", type="string", example="Updated description")
  *         )
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="Meal updated"
+ *         description="Meal updated successfully"
  *     )
  * )
  */
-Flight::route('PUT /meals/@id', function($id) {
-    $dao = new MealsDao();
-    $data = Flight::request()->data->getData();
-    $dao->update($id, $data);
-    Flight::json(['message' => 'Meal updated successfully']);
+Flight::route('PUT /meals/@id', function ($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
+
+    $data = json_decode(Flight::request()->getBody(), true);
+    Flight::json(Flight::meals_service()->update($id, $data));
 });
 
 /**
  * @OA\Delete(
  *     path="/meals/{id}",
  *     tags={"meals"},
- *     summary="Delete a meal",
+ *     summary="Delete meal",
+ *     security={{"BearerAuth": {}}},
  *     @OA\Parameter(
  *         name="id",
  *         in="path",
@@ -119,12 +129,11 @@ Flight::route('PUT /meals/@id', function($id) {
  *     ),
  *     @OA\Response(
  *         response=200,
- *         description="Meal deleted"
+ *         description="Meal deleted successfully"
  *     )
  * )
  */
-Flight::route('DELETE /meals/@id', function($id) {
-    $dao = new MealsDao();
-    $dao->delete($id);
-    Flight::json(['message' => 'Meal deleted successfully']);
+Flight::route('DELETE /meals/@id', function ($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
+    Flight::json(Flight::meals_service()->delete($id));
 });

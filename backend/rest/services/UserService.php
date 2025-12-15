@@ -75,4 +75,4 @@ class UserService extends BaseService {
         return $this->dao->getByEmail($email);
     }
 }
-?>
+

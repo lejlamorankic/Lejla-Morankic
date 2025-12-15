@@ -10,4 +10,4 @@ class WorkoutsDao extends BaseDao {
         return parent::getById($id);
     }
 }
-?>
+

@@ -24,6 +24,3 @@ class HydrationService extends BaseService {
         $this->dao->delete($id);
     }
 }
-?>
-
-?>

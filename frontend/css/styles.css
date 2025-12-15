@@ -1,0 +1,246 @@
+:root {
+  --baby-pink: #f9c5d1;
+  --accent: #d63384;
+  --dark: #222;
+  --white: #fff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--baby-pink);
+  font-family: 'Inter', sans-serif;
+  color: var(--dark);
+}
+
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 28px;
+  background-color: var(--white);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: var(--dark);
+  font-weight: 600;
+  margin-left: 20px;
+  transition: 0.2s ease;
+}
+
+.navbar a:hover {
+  color: var(--accent);
+}
+
+.navbar a.active {
+  border-bottom: 2px solid var(--accent);
+  color: var(--accent);
+}
+
+main {
+  padding-top: 80px;
+}
+
+.login-shell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--baby-pink);
+  gap: 20px; 
+}
+
+.login-left,
+.login-right {
+  width: 420px;
+  height: 460px;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.login-left {
+  background: url("../assets/img/hamster.jpg") center center / cover no-repeat;
+  border: none; 
+}
+
+
+.login-right {
+  background-color: var(--white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+.login-card {
+  width: 90%;
+  text-align: center;
+}
+
+.login-card h2 {
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .login-shell {
+    flex-direction: column;
+    height: auto;
+    padding: 40px 0;
+  }
+
+  .login-left,
+  .login-right {
+    width: 90%;
+    height: auto;
+  }
+}
+
+
+.login-card {
+  width: 100%;
+  text-align: center;
+}
+
+.login-card h2 {
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+
+.login-card h2 {
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.login-card button {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--accent);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.login-card button:hover {
+  background-color: #b12b6d;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.container {
+  padding: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--accent);
+  margin-bottom: 30px;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background-color: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.kicker {
+  font-size: 1.2rem;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.card p {
+  color: var(--dark);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+}
+
+.list li {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 1rem;
+}
+
+.list li:last-child {
+  border-bottom: none;
+}
+
+.quotes p {
+  font-style: italic;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: var(--dark);
+}
+
+@media (max-width: 768px) {
+  .login-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .login-left {
+    display: none;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  .page-title {
+    font-size: 1.6rem;
+  }
+}
+
+.admin-only {
+  display: none;
+}

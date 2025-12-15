@@ -12,4 +12,3 @@ class WorkoutsService extends BaseService {
         return $this->dao->getByUserId($user_id);
     }
 }
-?>
