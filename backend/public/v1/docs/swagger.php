@@ -1,21 +1,15 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+// UGASI deprecated i notice poruke da ne prljaju output
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+ini_set('display_errors', 0);
 
-require __DIR__ . '/../../../vendor/autoload.php';
-
-if ($_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] == '127.0.0.1') {
-    define('BASE_URL', 'http://localhost/LejlaMorankic/Lejla-Morankic/backend');
-} else {
-    define('BASE_URL', 'https://your-production-domain.com/backend');
-}
-
-
-$openapi = \OpenApi\Generator::scan([
-    __DIR__ . '/doc_setup.php',
-    __DIR__ . '/../../../routes'
-]);
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 header('Content-Type: application/json');
+
+// PRAVA putanja do tvojih ruta
+$openapi = \OpenApi\Generator::scan([
+    __DIR__ . '/../../../rest/routes',
+]);
+
 echo $openapi->toJson();
-?>

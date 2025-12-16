@@ -12,4 +12,4 @@ class MotivationService extends BaseService {
         return $this->dao->getByUserId($user_id);
     }
 }
-?>
+

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login | FitTrack</title>
+
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css"
+    rel="stylesheet"
+  />
+</head>
+<body>
+
+  <div class="login-shell">
+    <div class="login-left"></div>
+
+    <div class="login-right">
+      <div class="login-card card">
+        <div class="center">
+          <h2 style="margin: 0 0 6px">
+            Welcome to <span style="color: var(--accent)">FitTrack</span>
+          </h2>
+          <div class="small"></div>
+        </div>
+
+        <form id="login-form" style="margin-top: 16px">
+
+          <label class="label">Email</label>
+          <input
+            class="input"
+            type="email"
+            name="email"
+            required
+            placeholder="Your email"
+          />
+
+          <label class="label">Password</label>
+          <input
+            class="input"
+            type="password"
+            name="password"
+            required
+            placeholder="Your password"
+          />
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+            style="width: 100%; margin-top: 12px"
+          >
+            Login
+          </button>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+  UserService.initLogin();
+</script>
+
+
+</body>
+</html>
